@@ -11,7 +11,7 @@ class Driver {
  public:
     Driver();
     std::map<std::string, int> variables;
-    int result;
+    int return_code;
     int parse(const std::string& f);
     std::string file;
     bool trace_parsing;

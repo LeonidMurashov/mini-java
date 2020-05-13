@@ -9,7 +9,7 @@
     #include "parser.hh"
 %}
 
-%option noyywrap nounput noinput batch debug
+%option noyywrap nounput noinput batch debug yylineno
 
 %option c++
 %option yyclass="Scanner"
@@ -42,7 +42,6 @@ blank [ \t\r]
 \n+        loc.lines (yyleng); loc.step ();
 
 "-"        {
-              std::cout << loc.begin.line << " " << loc.end.line << std::endl;
               return yy::parser::make_MINUS  (loc);
            }
 "+"        return yy::parser::make_PLUS   (loc);
@@ -50,7 +49,29 @@ blank [ \t\r]
 "/"        return yy::parser::make_SLASH  (loc);
 "("        return yy::parser::make_LPAREN (loc);
 ")"        return yy::parser::make_RPAREN (loc);
-":="       return yy::parser::make_ASSIGN (loc);
+"{"        return yy::parser::make_LCURLBRACKET (loc);
+"}"        return yy::parser::make_RCURLBRACKET (loc);
+"="        return yy::parser::make_ASSIGN (loc);
+"int"      return yy::parser::make_INT_TYPE (loc);
+";"        return yy::parser::make_SEMICOLON (loc);
+"System.out.println"       return yy::parser::make_PRINTLN (loc);
+"public static void main"  return yy::parser::make_PSVM (loc);
+"class"    return yy::parser::make_CLASS (loc);
+"%"        return yy::parser::make_PERCENT (loc);
+"&&"        return yy::parser::make_AND (loc);
+"||"        return yy::parser::make_OR (loc);
+"=="        return yy::parser::make_EQUALS (loc);
+">"        return yy::parser::make_GREATER (loc);
+"<"        return yy::parser::make_LESS (loc);
+"!"        return yy::parser::make_EXCLAMATION (loc);
+"return"        return yy::parser::make_RETURN (loc);
+"while"        return yy::parser::make_WHILE (loc);
+"if"        return yy::parser::make_IF (loc);
+"true"        return yy::parser::make_TRUE (loc);
+"false"        return yy::parser::make_FALSE (loc);
+"this"        return yy::parser::make_THIS (loc);
+"assert"        return yy::parser::make_ASSERT (loc);
+
 
 {int}      return make_NUMBER(yytext, loc);
 {id}       return yy::parser::make_IDENTIFIER(yytext, loc);
