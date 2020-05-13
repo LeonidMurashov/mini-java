@@ -30,3 +30,15 @@
 *.exe
 *.out
 *.app
+
+**/location.hh
+**/parser.hh
+**/parser.cpp
+**/scanner.cpp
+*.gv
+*.png
+
+build/
+
+cmake-build-debug/
+.idea/
