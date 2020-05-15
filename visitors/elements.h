@@ -1,0 +1,27 @@
+#pragma once
+
+#include "expressions/AndBinary.h"
+#include "expressions/Constant.h"
+#include "expressions/Division.h"
+#include "expressions/Equal.h"
+#include "expressions/Greater.h"
+#include "expressions/Identifier.h"
+#include "expressions/Less.h"
+#include "expressions/Minus.h"
+#include "expressions/Modulo.h"
+#include "expressions/Multiplication.h"
+#include "expressions/NotBinary.h"
+#include "expressions/OrBinary.h"
+#include "expressions/Plus.h"
+
+#include "statements/Assert.h"
+#include "statements/Assignment.h"
+#include "statements/IfStatement.h"
+#include "statements/Main.h"
+#include "statements/Print.h"
+#include "statements/Return.h"
+#include "statements/StatementsList.h"
+#include "statements/VariableDeclaration.h"
+#include "statements/WhileLoop.h"
+
+#include "Program.h"

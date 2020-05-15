@@ -8,8 +8,12 @@
 
 %code requires {
     #include <string>
+    #include "visitors/elements.h"
+
     class Scanner;
     class Driver;
+    #include "visitors/forward_decl.h"
+    #include "Program.h"
 }
 
 // %param { Driver &drv }
@@ -61,6 +65,7 @@
     RETURN "return"
     WHILE "while"
     IF "if"
+    ELSE "else"
     TRUE "true"
     FALSE "false"
     THIS "this"
@@ -69,10 +74,13 @@
 
 %token <std::string> IDENTIFIER "identifier"
 %token <int> NUMBER "number"
-%nterm <int> statement
-%nterm <int> main_class
-%nterm <int> expr
-%nterm <int> binary_operation
+%nterm <Program*> program
+%nterm <BaseStatement*> statement
+%nterm <StatementsList*> statements
+%nterm <Main*> main_class
+%nterm <BaseExpression*> expr
+%nterm <BinaryExpression*> binary_operation
+%nterm <VariableDeclaration*> variable_declaration
 
 %printer { yyo << $$; } <*>;
 
@@ -80,10 +88,12 @@
 %start program;
 
 program:
-    main_class {}
+    main_class { $$ = new Program($1); driver.program = $$; }
 
 main_class:
-    "class" "identifier" "{" "public static void main" "(" ")" "{" statement "}" "}" {}
+    "class" "identifier" "{" "public static void main" "(" ")" "{" statements "}" "}" {
+        $$ = new Main($8);
+    }
 
 
 //class_declaration:
@@ -92,26 +102,25 @@ main_class:
 //formals
 
 statement:
-    "assert" "(" expr ")" ";" {
-        if (!$3) {
-            std::cout << "Assertion at line " << scanner.lineno() << std::endl;
-            driver.return_code = 1;
-            YYACCEPT;
-        }
-    }
-    | variable_declaration {}
-    | "{" statement "}" {}
-    | "if"  "(" expr ")" statement {}
-    | "if"  "(" expr ")" statement "else" statement {}
-    | "while"  "(" expr ")" statement {}
-    | "System.out.println" "(" expr ")" ";" { std::cout << $3 << std::endl; }
-    | "identifier" "=" expr ";" { driver.variables[$1] = $3; }
-    | "return" expr ";" { driver.return_code = $2; YYACCEPT; }
+    "assert" "(" expr ")" ";" { $$ = new Assert($3, scanner.lineno()); }
+    | variable_declaration { $$ = $1; }
+    | "{" statements "}" { $$ = $2; }
+    | "if"  "(" expr ")" statements { $$ = new IfStatement($3, $5, nullptr); }
+    | "if"  "(" expr ")" statements "else" statements { $$ = new IfStatement($3, $5, $7); }
+    | "while"  "(" expr ")" statements { $$ = new WhileLoop($3, $5); }
+    | "System.out.println" "(" expr ")" ";" { $$ = new Print($3); }
+    | "identifier" "=" expr ";" { $$ = new Assignment($1, $3); }
+    | "return" expr ";" { $$ = new Return($2); }
 //    | method_invocation ";" {}
-    | statement statement {}
+    | statements { $$ = $1; }
+
+statements:
+    %empty { $$ = new StatementsList(); }
+    | statements statement { $1->AddStatement($2); $$ = $1; }
 
 variable_declaration:
-    "int" "identifier" ";" { driver.variables[$2] = 0; }
+    "int" "identifier" ";" { $$ = new VariableDeclaration($2, 0); }
+    | "int" "identifier" "=" expr ";" { $$ = new VariableDeclaration($2, $4); }
 
 //method_invocation:
 //	expr "." "identifier" "(" [ expr ("," expr)* ] ")" {}
@@ -125,13 +134,13 @@ expr:
     | expr "[" expr "]" {}
     | expr "." "length" {}
     | "new" "int" "[" expr "]" {}
-    | "!" expr { $$ = !$2; }
+    | "!" expr { $$ = new NotBinary($2); }
     | "(" expr ")" { $$ = $2; }
-    | "identifier" { $$ = driver.variables[$1]; }
-    | "number" { $$ = $1; }
+    | "identifier" { $$ = new Identifier($1); }
+    | "number" { $$ = new Constant($1); }
     | "this" {}
-    | "true" { $$ = 1; }
-    | "false" { $$ = 0; }
+    | "true" { $$ = new Constant(1); }
+    | "false" { $$ = new Constant(0); }
 //    | method_invocation {}
 
 %left "||";
@@ -141,17 +150,16 @@ expr:
 %left "*" "/" "%";
 
 binary_operation:
-	  expr "&&" expr { $$ = $1 && $3; }
-	| expr "||" expr { $$ = $1 || $3; }
-	| expr "<" expr  { $$ = $1 < $3; }
-	| expr ">" expr  { $$ = $1 > $3; }
-	| expr "==" expr { $$ = $1 == $3; }
-	| expr "+" expr  { $$ = $1 + $3; }
-	| expr "-" expr  { $$ = $1 - $3; }
-	| expr "*" expr  { $$ = $1 * $3; }
-	| expr "/" expr  { $$ = $1 / $3; }
-	| expr "%" expr  { $$ = $1 % $3; }
-
+      expr "+" expr  { $$ = new Plus($1, $3); }
+    | expr "-" expr  { $$ = new Minus($1, $3); }
+    | expr "*" expr  { $$ = new Multiplication($1, $3); }
+    | expr "/" expr  { $$ = new Division($1, $3); }
+    | expr "%" expr  { $$ = new Modulo($1, $3); }
+    | expr "<" expr  { $$ = new Less($1, $3); }
+    | expr ">" expr  { $$ = new Greater($1, $3); }
+    | expr "==" expr  { $$ = new Equal($1, $3); }
+    | expr "||" expr  { $$ = new OrBinary($1, $3); }
+    | expr "&&" expr  { $$ = new AndBinary($1, $3); }
 %%
 
 void

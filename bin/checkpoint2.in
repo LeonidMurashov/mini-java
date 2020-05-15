@@ -1,0 +1,14 @@
+class Program {
+    public static void main() {
+        if (a == b && c % 2 == 0) {
+            while (true) {
+                System.out.println(good);
+            }
+        } else {
+            assert(3 == 2);
+            int a = 2;
+            a = 3;
+        }
+        System.out.println(2 + 3 * 6);
+    }
+}

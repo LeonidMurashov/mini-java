@@ -71,6 +71,7 @@ blank [ \t\r]
 "false"        return yy::parser::make_FALSE (loc);
 "this"        return yy::parser::make_THIS (loc);
 "assert"        return yy::parser::make_ASSERT (loc);
+"else"        return yy::parser::make_ELSE (loc);
 
 
 {int}      return make_NUMBER(yytext, loc);

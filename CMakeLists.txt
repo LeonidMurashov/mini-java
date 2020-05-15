@@ -61,7 +61,18 @@ add_executable(
     driver.cpp
     ${BISON_MyParser_OUTPUTS}
     ${FLEX_MyScanner_OUTPUTS}
-)
+        ASTNode.h
+        Program.h
+        expressions/BaseExpression.h
+        expressions/BinaryExpression.h
+        expressions/Plus.h
+        statements/BaseStatement.h
+        statements/Main.cpp
+        statements/Main.h
+        visitors/BaseVisitor.h
+        visitors/PrintVisitor.cpp
+        visitors/PrintVisitor.h
+        visitors/elements.h statements/StatementsList.cpp statements/StatementsList.h expressions/Constant.cpp expressions/Constant.h statements/Print.cpp statements/Print.h expressions/Minus.h expressions/Division.h expressions/Multiplication.h expressions/Modulo.h expressions/OrBinary.h expressions/AndBinary.h expressions/Greater.h expressions/Less.h expressions/Equal.h statements/VariableDeclaration.cpp statements/VariableDeclaration.h statements/Assert.cpp statements/Assert.h statements/IfStatement.cpp statements/IfStatement.h statements/WhileLoop.cpp statements/WhileLoop.h statements/Assignment.cpp statements/Assignment.h statements/Return.cpp statements/Return.h expressions/NotBinary.cpp expressions/NotBinary.h expressions/Identifier.cpp expressions/Identifier.h)
 target_include_directories(MiniJava PRIVATE ${MiniJava_SOURCE_DIR})
 
 
