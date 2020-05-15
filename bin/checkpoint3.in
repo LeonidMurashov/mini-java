@@ -1,0 +1,34 @@
+class Program {
+    public static void main() {
+        int i = 0;
+        while (i < 5) {
+            if (i % 2 == 0) {
+                System.out.println(1337);
+
+            } else {
+                System.out.println(420);
+            }
+            i = i + 1;
+        }
+        System.out.println(i);
+
+        int x = 0;
+        int n = 15;
+        while (x < n) {
+            int y = 0;
+            while (y < n * 2) {
+                int c = 0;
+                if ((x - n / 2) * (x - n / 2) + (y - n) * (y - n) / 4 < 25) {
+                    c = 7;
+                }
+                if (y == n * 2 - 1) {
+                    System.out.println(c);
+                } else {
+                    System.out.print(c);
+                }
+                y = y + 1;
+            }
+            x = x + 1;
+        }
+    }
+}

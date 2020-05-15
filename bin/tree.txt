@@ -1,0 +1,103 @@
+Program
+  main()
+    Declare: i =
+      0
+    while (
+      <
+        i
+        5
+    ) {
+      if (
+        ==
+          %
+            i
+            2
+          0
+      ) {
+        Print()
+          1337
+      } else {
+        Print()
+          420
+      }
+      i =
+        +
+          i
+          1
+    }
+    Print()
+      i
+    Declare: x =
+      0
+    Declare: n =
+      15
+    while (
+      <
+        x
+        n
+    ) {
+      Declare: y =
+        0
+      while (
+        <
+          y
+          *
+            n
+            2
+      ) {
+        Declare: c =
+          0
+        if (
+          <
+            +
+              *
+                -
+                  x
+                  /
+                    n
+                    2
+                -
+                  x
+                  /
+                    n
+                    2
+              /
+                *
+                  -
+                    y
+                    n
+                  -
+                    y
+                    n
+                4
+            25
+        ) {
+          c =
+            7
+        } else {
+        }
+        if (
+          ==
+            y
+            -
+              *
+                n
+                2
+              1
+        ) {
+          Print()
+            c
+        } else {
+          Print()
+            c
+        }
+        y =
+          +
+            y
+            1
+      }
+      x =
+        +
+          x
+          1
+    }

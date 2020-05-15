@@ -29,5 +29,5 @@ public:
   virtual void Visit(OrBinary *statement) = 0;
   virtual void Visit(Plus *statement) = 0;
 
-  virtual void Visit(Program *program) = 0;
+  virtual int Visit(Program *program) = 0;
 };

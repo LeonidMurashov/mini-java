@@ -2,10 +2,15 @@
 #include "BaseVisitor.h"
 #include "forward_decl.h"
 #include <expressions/BaseExpression.h>
+#include <fstream>
 #include <string>
 class PrintVisitor : public BaseVisitor {
 public:
-  void Visit(Program *program) override;
+  explicit PrintVisitor(const std::string &path)
+      : fout(path, std::ios_base::out) {}
+  ~PrintVisitor() { fout.close(); }
+
+  int Visit(Program *program) override;
   void Visit(Main *statement) override;
   void Visit(StatementsList *list) override;
   void Visit(Constant *number) override;
@@ -39,4 +44,5 @@ public:
 
 private:
   int tabulation_length_ = 0;
+  std::ofstream fout;
 };

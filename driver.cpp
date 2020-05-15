@@ -1,6 +1,7 @@
 #include "driver.hh"
 #include "Program.h"
 #include "parser.hh"
+#include <visitors/Interpreter.h>
 #include <visitors/PrintVisitor.h>
 
 Driver::Driver() :
@@ -23,8 +24,12 @@ int Driver::parse(const std::string& f) {
 }
 
 int Driver::exec() {
-  PrintVisitor visitor;
-  visitor.Visit(program);
+  PrintVisitor printer("tree.txt");
+  printer.Visit(program);
+
+  Interpreter interpreter;
+  int ret = interpreter.Visit(program);
+//  std::cout << "Exit code " << ret << std::endl;
 }
 
 void Driver::scan_begin() {

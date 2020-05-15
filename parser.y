@@ -60,6 +60,7 @@
     SEMICOLON ";"
     INT_TYPE "int"
     PRINTLN "System.out.println"
+    PRINT "System.out.print"
     PSVM "public static void main"
     CLASS "class"
     RETURN "return"
@@ -77,6 +78,7 @@
 %nterm <Program*> program
 %nterm <BaseStatement*> statement
 %nterm <StatementsList*> statements
+%nterm <StatementsList*> bracketed_statements
 %nterm <Main*> main_class
 %nterm <BaseExpression*> expr
 %nterm <BinaryExpression*> binary_operation
@@ -105,14 +107,19 @@ statement:
     "assert" "(" expr ")" ";" { $$ = new Assert($3, scanner.lineno()); }
     | variable_declaration { $$ = $1; }
     | "{" statements "}" { $$ = $2; }
-    | "if"  "(" expr ")" statements { $$ = new IfStatement($3, $5, nullptr); }
-    | "if"  "(" expr ")" statements "else" statements { $$ = new IfStatement($3, $5, $7); }
-    | "while"  "(" expr ")" statements { $$ = new WhileLoop($3, $5); }
-    | "System.out.println" "(" expr ")" ";" { $$ = new Print($3); }
+    | "if"  "(" expr ")" bracketed_statements { $$ = new IfStatement($3, $5, nullptr); }
+    | "if"  "(" expr ")" bracketed_statements "else" bracketed_statements
+        { $$ = new IfStatement($3, $5, $7); }
+    | "while"  "(" expr ")" bracketed_statements { $$ = new WhileLoop($3, $5); }
+    | "System.out.println" "(" expr ")" ";" { $$ = new Print($3, true); }
+    | "System.out.print" "(" expr ")" ";" { $$ = new Print($3, false); }
     | "identifier" "=" expr ";" { $$ = new Assignment($1, $3); }
     | "return" expr ";" { $$ = new Return($2); }
 //    | method_invocation ";" {}
     | statements { $$ = $1; }
+
+bracketed_statements:
+    "{" statements "}" { $$ = $2; }
 
 statements:
     %empty { $$ = new StatementsList(); }

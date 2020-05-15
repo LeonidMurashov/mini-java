@@ -55,6 +55,7 @@ blank [ \t\r]
 "int"      return yy::parser::make_INT_TYPE (loc);
 ";"        return yy::parser::make_SEMICOLON (loc);
 "System.out.println"       return yy::parser::make_PRINTLN (loc);
+"System.out.print"       return yy::parser::make_PRINT (loc);
 "public static void main"  return yy::parser::make_PSVM (loc);
 "class"    return yy::parser::make_CLASS (loc);
 "%"        return yy::parser::make_PERCENT (loc);

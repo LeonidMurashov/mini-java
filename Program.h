@@ -6,7 +6,7 @@
 
 class Program : public ASTNode{
 public:
-  Program(Main *main_statement) : main_statement_(main_statement) {}
+  Program(Main *main_statement) : main_statement(main_statement) {}
 
 private:
   void Accept(BaseVisitor *visitor) override {
@@ -14,5 +14,5 @@ private:
   }
 
 public:
-  Main *main_statement_;
+  Main *main_statement;
 };
